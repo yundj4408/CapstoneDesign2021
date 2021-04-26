@@ -1,10 +1,10 @@
 int ENA=5;
 int ENB=6;
 
-int IN1=4;
-int IN2=3;
-int IN3=2;
-int IN4=7;
+int IN1=8;
+int IN2=9;
+int IN3=10;
+int IN4=11;
 
 void setup()
 {
