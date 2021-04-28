@@ -19,6 +19,7 @@
     
 */
 
+#define Steps 200
 
 int SetpAp =  8;    // Step Motor A  빨강
 int SetpAn =  9;    // Step Motor A- 초록
@@ -48,16 +49,16 @@ void setup() {
   MenuDisplay();
 }
 
-void UP_OneStep()  // 1상 여자방식 -> 전류를 적게 먹는다. 1000 0100 0010 0001
+void UP_OneStep()  // 1상 여자방식 -> 전류를 적게 먹는다. 1000 0100 0010 0001 
 {
   char temp;
   //pCW_Value = 0x88;
-  
   temp = pCW_Value & 0x01;
   //Serial.println(temp, HEX);  
   pCW_Value >>= 1;  // Right Shift 1-bit
   pCW_Value = pCW_Value&0x0F;
   pCW_Value |= ((pCW_Value&0x0F)<<4);
+  pCW_Value = pCW_Value | (temp<<7);
   
   digitalWrite(SetpAp, pCW_Value&0x08 );
   digitalWrite(SetpBp, pCW_Value&0x04 );
@@ -72,6 +73,8 @@ void UP_TwoStep()  // 2상 여자방식 -> 1100 0110 0011 1001
   pCW_Value |= 0x44;
   temp = pCW_Value & 0x01;
   pCW_Value >>= 1;  // Right Shift 1-bit
+  pCW_Value = pCW_Value&0x0F;
+  pCW_Value |= ((pCW_Value&0x0F)<<4);
   pCW_Value = pCW_Value | (temp<<7);
   
   digitalWrite(SetpAp, pCW_Value&0x08 );
@@ -80,7 +83,7 @@ void UP_TwoStep()  // 2상 여자방식 -> 1100 0110 0011 1001
   digitalWrite(SetpBn, pCW_Value&0x01 );
 }
 
-void UP_OneTwoStep()  // 1상2상 여자방식 -> 1000 1100 0100 0110 0010 0011 0001 1001   pcw_value1= 1000 1000,value2= 1100 1100  
+void UP_OneTwoStep()  // 1상2상 여자방식 -> 1000 1100 0100 0110 0010 0011 0001 1001   pcw_value1= 1000 1000,value2= 1000 1100  
 {
   char temp;
   char pre_Value;
@@ -90,6 +93,8 @@ void UP_OneTwoStep()  // 1상2상 여자방식 -> 1000 1100 0100 0110 0010 0011 
     pre_Value = pCW_Value;
     temp = pCW_Value & 0x01;
     pCW_Value >>= 1;
+    pCW_Value = pCW_Value&0x0F;
+    pCW_Value |= ((pCW_Value&0x0F)<<4);
     pCW_Value = pCW_Value | (temp<<7);
     pCW_Value |= pre_Value; 
   }
@@ -121,21 +126,21 @@ void loop() {
     if (inByte == 1) 
     {
       Serial.print("1을 수행합니다.\n");
-      for( i=0; i< 5; i++)
+      for( i=0; i< Steps; i++)
         UP_OneStep();
       MenuDisplay();
     }
     else if (inByte == 2) 
     {
       Serial.print("2을 수행합니다.\n");
-      for( i=0; i< 100; i++)
+      for( i=0; i< Steps; i++)
         UP_TwoStep();
       MenuDisplay();
     }
     else if (inByte == 3) 
     {
       Serial.print("3을 수행합니다.\n");
-      for( i=0; i< 100; i++)
+      for( i=0; i< Steps; i++)
         UP_OneTwoStep();
       MenuDisplay();
     }    
