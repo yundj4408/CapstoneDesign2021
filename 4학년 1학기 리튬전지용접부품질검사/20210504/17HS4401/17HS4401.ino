@@ -18,5 +18,5 @@ void loop(){
   digitalWrite(stepPin,HIGH);
   delayMicroseconds(500);
   digitalWrite(stepPin,LOW);
-  delay(1);
+  delay(10);
 }   

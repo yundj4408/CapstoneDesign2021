@@ -13,6 +13,7 @@
 //EnaPin은 Default값이 Low이기 때문에 항상 On이 되어 있다. 
 //SLP과 RST은 Pin이 똑같이 active low input이다. RST가 LOW가 되면 모든 Step이 무시된다. 그래서 두개 다 high로 만들어줘야 한다. 
 //The RST pin is floating. If you are not using the pin, you can connect it to the adjacent SLP/SLEEP pin to bring it high and enable the driver.
+//1상은 없고 2상, 1-2상, W1-2상, 2W1-2상, 4W1-2상
 
 //-------------Pin Setting---------------
 #define dirPin        3
@@ -22,13 +23,14 @@
 #define MS3           7
 //-------------Step Setting-----------------------------------------------------------------------
 #define Steps                 200
-#define StepDelay             1000
+#define StepDelay             500
 #define DelayH                {delayMicroseconds(StepDelay);}            
-#define DelayL                {delayMicroseconds(StepDelay/2);}
+#define DelayL                {delay(StepDelay/50);}
 #define Run                   {digitalWrite(stepPin, HIGH); DelayH; digitalWrite(stepPin, LOW); DelayL;}            
 //-------------Phase Setting------------------------------------------------------------------------
-//#define OnePhase            {digitalWrite(MS1, ); digitalWrite(MS2, ); digitalWrite(MS3, );}
 #define TwoPhase              {digitalWrite(MS1, LOW); digitalWrite(MS2, LOW); digitalWrite(MS3, LOW);}     //Full Step
+#define OneTwoPhase           {digitalWrite(MS1, HIGH); digitalWrite(MS2, LOW); digitalWrite(MS3, LOW);}    //Half Step
+#define OneTwoPhase           {digitalWrite(MS1, HIGH); digitalWrite(MS2, LOW); digitalWrite(MS3, LOW);}    //Half Step
 #define OneTwoPhase           {digitalWrite(MS1, HIGH); digitalWrite(MS2, LOW); digitalWrite(MS3, LOW);}    //Half Step
 
 
@@ -45,7 +47,6 @@ void setup(){
 
 void loop(){
 
-  
    while(Serial.available() > 0) 
   {
     inByte = Serial.parseInt();
